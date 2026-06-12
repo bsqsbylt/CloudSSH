@@ -158,6 +158,8 @@ export class SSHSession {
   }
 
   private async writeSocket(data: Uint8Array): Promise<void> {
+    const hexPreview = Array.from(data.slice(0, 20)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    console.log('[SOCK] Writing', data.length, 'bytes:', hexPreview, '...');
     const writer = this.socket.writable.getWriter();
     await writer.write(data);
     writer.releaseLock();
@@ -280,6 +282,13 @@ export class SSHSession {
   private async enableEncryption(): Promise<void> {
     console.log('[KEX] Enabling encryption...');
     const keys = this.derivedKeys;
+
+    const c2sKeyHex = Array.from(keys.encKeyClientToServer.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    const c2sIVHex = Array.from(keys.ivClientToServer).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    const s2cKeyHex = Array.from(keys.encKeyServerToClient.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    const s2cIVHex = Array.from(keys.ivServerToClient).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    console.log('[KEX] C2S key (first 8):', c2sKeyHex, 'IV:', c2sIVHex);
+    console.log('[KEX] S2C key (first 8):', s2cKeyHex, 'IV:', s2cIVHex);
 
     this.encryptCipher = new SSHAESGCMCipher(
       keys.encKeyClientToServer,
