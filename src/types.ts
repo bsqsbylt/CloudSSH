@@ -48,7 +48,6 @@ export interface SSHConnectionConfig {
 
 export interface Env {
   SSH_SESSION: DurableObjectNamespace;
-  ASSETS: Fetcher;
   MAX_CONNECTIONS?: string;
   IDLE_TIMEOUT?: string;
 }
