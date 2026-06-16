@@ -5,6 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 # no_bundle = true
 workers_dev = false
 
+
 [[routes]]
 pattern = "ssh.lfq.kdns.fr"
 custom_domain = true
